@@ -14,8 +14,7 @@ var chai = require('chai')
   , moment = require('moment')
   , Transaction = require(__dirname + '/../../lib/transaction')
   , sinon = require('sinon')
-  , babel = require('babel-core')
-  , fs = require('fs')
+  , semver = require('semver')
   , current = Support.sequelize;
 
 
@@ -268,6 +267,12 @@ describe(Support.getTestDialectTeaser('Sequelize'), function() {
       // We can only test MySQL warnings when using MySQL.
       if (dialect === 'mysql') {
         it('logs warnings when there are warnings', function() {
+
+          // Due to strict MySQL 5.7 all cases below will throw errors rather than warnings
+          if (semver.gte(current.options.databaseVersion, '5.6.0')) {
+            return;
+          }
+
           var logger = sinon.spy();
           var sequelize = Support.createSequelizeInstance({
             logging: logger,
@@ -1005,7 +1010,7 @@ describe(Support.getTestDialectTeaser('Sequelize'), function() {
               'password authentication failed for user "bar"'
             ].indexOf(err.message.trim()) !== -1);
           } else if (dialect === 'mssql') {
-            expect(err.message).to.match(/.*ECONNREFUSED.*/);
+            expect(err.message).to.equal('Login failed for user \'bar\'.');
           } else {
             expect(err.message.toString()).to.match(/.*Access\ denied.*/);
           }
@@ -1171,18 +1176,9 @@ describe(Support.getTestDialectTeaser('Sequelize'), function() {
       expect(Project).to.exist;
     });
 
-    it('imports a dao definition from a file compiled with babel', function () {
-      var es6project = babel.transformFileSync(__dirname + '/assets/es6project.es6', {
-        presets: ['es2015']
-      }).code;
-      fs.writeFileSync(__dirname + '/assets/es6project.js', es6project);
+    it('imports a dao definition with a default export', function () {
       var Project = this.sequelize.import(__dirname + '/assets/es6project');
       expect(Project).to.exist;
-
-    });
-
-    after(function(){
-      fs.unlink(__dirname + '/assets/es6project.js');
     });
 
     it('imports a dao definition from a function', function() {

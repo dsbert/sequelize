@@ -62,9 +62,9 @@ var sequelize = new Sequelize('mysql://localhost:3306/database', {})
 | [options.native=false] | Boolean | A flag that defines if native library shall be used or not. Currently only has an effect for postgres |
 | [options.replication=false] | Boolean | Use read / write replication. To enable replication, pass an object, with two properties, read and write. Write should be an object (a single server for handling writes), and read an array of object (several servers to handle reads). Each read/write server can have the following properties: `host`, `port`, `username`, `password`, `database` |
 | [options.pool={}] | Object | Should sequelize use a connection pool. Default is true |
-| [options.pool.max] | Integer |  |
-| [options.pool.min] | Integer |  |
-| [options.pool.idle] | Integer | The maximum time, in milliseconds, that a connection can be idle before being released |
+| [options.pool.max] | Integer | Maximum number of connections in pool. Default is 5 |
+| [options.pool.min] | Integer | Minimum number of connections in pool. Default is 0 |
+| [options.pool.idle] | Integer | The maximum time, in milliseconds, that a connection can be idle before being released. Default is 10000 |
 | [options.pool.validateConnection] | Function | A function that validates a connection. Called with client. The default function checks that client is an object, and that its state is not disconnected |
 | [options.quoteIdentifiers=true] | Boolean | Set to `false` to make table names and attributes case-insensitive on Postgres and skip double quoting of them. |
 | [options.transactionType='DEFERRED'] | String | Set the default transaction type. See `Sequelize.Transaction.TYPES` for possible options. Sqlite only. |
@@ -478,13 +478,13 @@ sequelize.models.modelName // The model will now be available in models under th
 
 As shown above, column definitions can be either strings, a reference to one of the datatypes that are predefined on the Sequelize constructor, or an object that allows you to specify both the type of the column, and other attributes such as default values, foreign key constraints and custom setters and getters.
 
-For a list of possible data types, see http://docs.sequelizejs.com/en/latest/docs/models-definition/#data-types
+For a list of possible data types, see [Data Types](http://docs.sequelizejs.com/en/latest/docs/models-definition/#data-types).
 
-For more about getters and setters, see http://docs.sequelizejs.com/en/latest/docs/models-definition/#getters-setters
+For more about getters and setters, see [Getters and Setters](http://docs.sequelizejs.com/en/latest/docs/models-definition/#getters-setters).
 
-For more about instance and class methods, see http://docs.sequelizejs.com/en/latest/docs/models-definition/#expansion-of-models
+For more about instance and class methods, see [Expansion of Models](http://docs.sequelizejs.com/en/latest/docs/models-definition/#expansion-of-models).
 
-For more about validation, see http://docs.sequelizejs.com/en/latest/docs/models-definition/#validations
+For more about validation, see [Validations](http://docs.sequelizejs.com/en/latest/docs/models-definition/#validations).
 
 **See:**
 

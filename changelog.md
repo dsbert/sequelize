@@ -1,5 +1,22 @@
 # Future
+- [FIXED] `restore` now uses `field` from `deletedAt` 
+- [FIXED] MSSQL bulkInsertQuery when options and attributes are not passed
+- [FIXED] `DATEONLY` now returns `YYYY-MM-DD` date string [#4858] (https://github.com/sequelize/sequelize/issues/4858)
+- [FIXED] Issues with `createFunction` and `dropFunction` (PostgresSQL)
+- [FIXED] Issue with belongsTo association and foreign keys [#6400](https://github.com/sequelize/sequelize/issues/6400)
+- [FIXED] Issue with query generation in MSSQL, an identifier was not escaped [#6686] (https://github.com/sequelize/sequelize/pull/6686)
+- [FIXED] GroupedLimit when foreignKey has a field alias
+- [FIXED] groupedLimit.through.where support
+- [ADDED] `option.silent` for increment and decrement [#6795](https://github.com/sequelize/sequelize/pull/6795)
+
+## BC breaks:
+- `DATEONLY` now returns string in `YYYY-MM-DD` format rather than `Date` type
+
+# 4.0.0-2
+- [ADDED] include now supports string as an argument (on top of model/association), string will expand into an association matched literally from Model.associations
 - [FIXED] Accept dates as string while using `typeValidation` [#6453](https://github.com/sequelize/sequelize/issues/6453)
+- [FIXED] - ORDER clause was not included in subquery if `order` option value was provided as plain string (not as an array value)
+- [FIXED] support for CLS with `cls-bluebird` module
 
 # 4.0.0-1
 - [CHANGED] Removed `modelManager` parameter from `Model.init()` [#6437](https://github.com/sequelize/sequelize/issues/6437)
@@ -75,6 +92,7 @@
 - [FIXED] All associations now prefer aliases to construct foreign key [#5267](https://github.com/sequelize/sequelize/issues/5267)
 - [REMOVED] Default transaction auto commit [#5094](https://github.com/sequelize/sequelize/issues/5094)
 - [REMOVED] Callback support for hooks [#5228](https://github.com/sequelize/sequelize/issues/5228)
+- [FIXED] Setting required in a nested include will not force the parent include to be required as well [#5999](https://github.com/sequelize/sequelize/issues/5999)
 
 ## BC breaks:
 - `hookValidate` removed in favor of `validate` with `hooks: true | false`. `validate` returns a promise which is rejected if validation fails
@@ -92,6 +110,7 @@
 - All associations type will prefer `as` when constructing the `foreignKey` name. You can override this by `foreignKey` option.
 - Removed default `AUTO COMMIT` for transaction. Its only sent if explicitly set by user or required by dialects (like `mysql`)
 - Hooks no longer provide a callback - you can return a `then`-able instead if you are doing async stuff
+- Table names of a select query have change internally from 'originModel.associatedModel.field' to 'originModel->associatedModel.field'
 
 # 3.23.2
 - [FIXED] Type validation now works with non-strings due to updated validator@5.0.0 [#5861](https://github.com/sequelize/sequelize/pull/5861)

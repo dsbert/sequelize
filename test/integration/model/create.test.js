@@ -1004,7 +1004,7 @@ describe(Support.getTestDialectTeaser('Model'), function() {
             expect(str2.str).to.equal('http://sequelizejs.org');
             return StringIsNullOrUrl.create({ str: '' }).catch(function(err) {
               expect(err).to.exist;
-              expect(err.get('str')[0].message).to.match(/Validation isURL failed/);
+              expect(err.get('str')[0].message).to.match(/Validation isURL on str failed/);
             });
           });
         });
@@ -1619,7 +1619,7 @@ describe(Support.getTestDialectTeaser('Model'), function() {
           expect(errors[0].errors.get('name')[0].type).to.equal('notNull Violation');
           expect(errors[1].record.name).to.equal('bar');
           expect(errors[1].record.code).to.equal('1');
-          expect(errors[1].errors.get('code')[0].message).to.equal('Validation len failed');
+          expect(errors[1].errors.get('code')[0].message).to.equal('Validation len on code failed');
         });
       });
     });
@@ -1850,6 +1850,30 @@ describe(Support.getTestDialectTeaser('Model'), function() {
         expect(m.id).to.be.eql(M2.id);
         expect(m.name).to.be.eql(M2.name);
         expect(m.secret).to.be.eql(M2.secret);
+      });
+    });
+    
+    it('should return autoIncrement primary key (create)', function() {
+      var Maya = this.sequelize.define('Maya', {});
+
+      var M1 = {};
+
+      return Maya.sync({ force: true }).then(() => Maya.create(M1, {returning: true}))
+      .then((m) => {
+        expect(m.id).to.be.eql(1);
+      });
+    });
+  
+    it('should return autoIncrement primary key (bulkCreate)', function() {
+      var Maya = this.sequelize.define('Maya', {});
+
+      var M1 = {};
+      var M2 = {};
+
+      return Maya.sync({ force: true }).then(() => Maya.bulkCreate([M1, M2], {returning: true}))
+      .then((ms) => {
+        expect(ms[0].id).to.be.eql(1);
+        expect(ms[1].id).to.be.eql(2);
       });
     });
   });
